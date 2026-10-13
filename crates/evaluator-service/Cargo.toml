@@ -1,0 +1,11 @@
+[package]
+name = "setl8-evaluator-service"
+description = "Evaluator service host"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+license.workspace = true
+
+[lints]
+workspace = true

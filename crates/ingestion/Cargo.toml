@@ -1,0 +1,11 @@
+[package]
+name = "setl8-ingestion"
+description = "Price ingestion service"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+license.workspace = true
+
+[lints]
+workspace = true

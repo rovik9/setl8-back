@@ -1,0 +1,13 @@
+target/
+.env*
+
+# Keypair / wallet style files. Never commit these (see CLAUDE.md rule 1).
+*keypair*.json
+*-wallet.json
+wallet*.json
+id.json
+phantom*.json
+*.pem
+*.key
+*.seed
+*.mnemonic
