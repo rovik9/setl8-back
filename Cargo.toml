@@ -1,0 +1,24 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/common",
+    "crates/ingestion",
+    "crates/gateway",
+    "crates/evaluator-service",
+    "crates/publisher",
+    "crates/keeper",
+]
+
+[workspace.package]
+version = "0.0.0"
+edition = "2021"
+rust-version = "1.97"
+publish = false
+license = "LicenseRef-Proprietary"
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+[workspace.lints.clippy]
+# CLAUDE.md rule 2: integer-only math. Floats are rejected in all workspace code.
+float_arithmetic = "deny"

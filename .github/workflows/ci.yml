@@ -1,0 +1,80 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches-ignore: [main]
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  rust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: rustup show
+      - run: cargo fmt --check
+      - run: cargo clippy --all-targets -- -D warnings
+      - run: cargo test --workspace
+
+  deny:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: EmbarkStudios/cargo-deny-action@v2
+        with:
+          command: check
+
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: gitleaks
+        env:
+          GITLEAKS_VERSION: "8.21.2"
+        run: |
+          set -euo pipefail
+          curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" -o "$RUNNER_TEMP/gitleaks.tgz"
+          mkdir "$RUNNER_TEMP/gl" && tar -xzf "$RUNNER_TEMP/gitleaks.tgz" -C "$RUNNER_TEMP/gl"
+          "$RUNNER_TEMP/gl/gitleaks" detect --source . --redact --verbose
+
+  commit-rules:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: resolve commit range
+        id: range
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            range="${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
+          else
+            git fetch --no-tags origin main
+            range="origin/main..${{ github.sha }}"
+          fi
+          echo "range=$range" >> "$GITHUB_OUTPUT"
+      - name: identity check
+        run: scripts/check_identity.sh "${{ steps.range.outputs.range }}"
+      - name: protected paths
+        run: scripts/check_protected_paths.sh "${{ steps.range.outputs.range }}"
+
+  golden-vectors:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: golden vectors (placeholder)
+        run: |
+          # TODO(interfaces): run golden-vector conformance once interfaces/golden/ is exported.
+          if [ -d interfaces/golden ]; then
+            echo "interfaces/golden present but no runner implemented yet" >&2
+            exit 1
+          fi
+          echo "interfaces/golden absent; skipping"
