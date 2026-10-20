@@ -22,7 +22,7 @@ Setl8 backend (`setl8-back`). Sibling repos: `setl8-sign` (policy signer), `setl
 - `crates/keeper` permissionless heartbeat and finalize bot, holds no funds
 - `interfaces/`, `vendor/` read-only exports (see their READMEs)
 - `docs/DESIGN.md` architecture
-- `scripts/` CI helper checks (identity, protected paths)
+- `scripts/` CI helper checks (identity, protected paths) and `test_guards.sh` self-test
 
 ## Checks before pushing
 

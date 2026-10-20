@@ -66,6 +66,13 @@ jobs:
       - name: protected paths
         run: scripts/check_protected_paths.sh "${{ steps.range.outputs.range }}"
 
+  guard-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: guard script self-tests
+        run: scripts/test_guards.sh
+
   golden-vectors:
     runs-on: ubuntu-latest
     steps:
