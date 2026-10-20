@@ -6,6 +6,8 @@
 
 use core::fmt;
 
+pub mod chain;
+
 /// A trading sector. Each sector has its own evaluator process, key and DB schema.
 ///
 /// TODO(interfaces): the canonical sector identifiers (and any on-chain encoding) come from the
